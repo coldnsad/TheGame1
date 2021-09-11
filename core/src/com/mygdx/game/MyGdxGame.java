@@ -14,7 +14,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		bg = new GrassBackground();
-		enemy = new Ghost(bg.getKeyPoints());
+		enemy = new Ghost(bg.getKeyPoints(), bg);
 	}
 
 	@Override
@@ -22,13 +22,18 @@ public class MyGdxGame extends ApplicationAdapter {
 		update();
 		batch.begin();
 		bg.render(batch);
-		enemy.render(batch);
+		if(enemy != null) enemy.render(batch);
 		batch.end();
 	}
 
 	public void update() {
-		bg.update();
-		enemy.update();
+		if (enemy != null && enemy.position.x > bg.endOfBg + 20) {
+			enemy = null;
+		}
+		else if (enemy != null){
+			enemy.update();
+		}
+		bg.update(enemy);
 	}
 	
 	@Override

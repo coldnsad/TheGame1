@@ -8,10 +8,11 @@ import java.util.ArrayList;
 
 public class Ghost extends Enemy{
 
-    Ghost(ArrayList<Vector2> keyPoints) {
+    Ghost(ArrayList<Vector2> keyPoints, Background bg) {
+        super(bg);
         texture = new Texture("./TD/Sprites/mob112x100.png");
-        position = new Vector2(-20,320);
-        speed = 0.5f;
+        //Speed can be only divider of 10 (1,2,5,10)
+        speed = 2.0f;
 
         this.keyPoints = keyPoints;
     }

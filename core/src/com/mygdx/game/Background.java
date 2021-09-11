@@ -11,6 +11,8 @@ public abstract class Background {
     protected Texture texture;
     protected Vector2 position;
     protected ArrayList<Vector2> keyPoints;
+    protected Vector2 positionOfEnemies;
+    protected int endOfBg;
 
     Background(){
         position = new Vector2(0,0);
@@ -24,7 +26,7 @@ public abstract class Background {
         batch.draw(texture, position.x, position.y);
     }
 
-    public void update(){
+    public void update(Enemy enemy){
 
     }
 }
