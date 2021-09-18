@@ -18,8 +18,8 @@ public class GrassBackground extends Background{
         keyPoints.add(new Vector2(130, 320));  //1
         keyPoints.add(new Vector2(130, 550));  //2
         keyPoints.add(new Vector2(380, 550));  //3
-        keyPoints.add(new Vector2(380, 220));  //4
-        keyPoints.add(new Vector2(700, 220));  //5
+        keyPoints.add(new Vector2(380, 230));  //4
+        keyPoints.add(new Vector2(700, 230));  //5
         keyPoints.add(new Vector2(700, 390));  //6
     }
 

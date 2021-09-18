@@ -1,18 +1,17 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
-class Ghost extends Enemy{
+class Samurai extends Enemy{
 
-    Ghost(Background bg) {
+    Samurai(Background bg){
         position = new Vector2(bg.positionOfEnemies.x, bg.positionOfEnemies.y);
-        texture = new Texture("./TD/Sprites/mob112x100.png");
-        //Speed can be only divider of 10 (1,2,5,10)
-        speed = 0.5f;
+        texture = new Texture("./TD/Sprites/samurai118x100.png");
+        //Speed can be only divider of 10 (1,2,5)
+        speed = 1.0f;
 
         this.keyPoints = bg.keyPoints;
     }

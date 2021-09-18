@@ -14,8 +14,7 @@ abstract public class Enemy {
     protected float speed;
     protected ArrayList<Vector2> keyPoints;
 
-    public Enemy(Background bg){
-        position = bg.positionOfEnemies;
+    public Enemy(){
     }
 
     public void render(SpriteBatch batch){
