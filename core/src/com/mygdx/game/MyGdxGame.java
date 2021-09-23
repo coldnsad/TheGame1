@@ -20,21 +20,23 @@ public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Background bg;
 	ArrayList<Enemy> enemies;
-	ArrayList<Image> towers;
 	UIPanel panel;
 
 	Stage stage;
 	Skin skin;
 
 	Tower tower;
+	ArrayList<Image> towersOnPanel;
 	ArrayList<Tower> activeTowers;
+	String[] pathTowers;
 
 	//Inner class for listeners
-	class TowerListener extends ClickListener {
+	class TowerOnPanelListener extends ClickListener {
+
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			//Create object of tower if key is in down state
 			if (tower == null) {
-				tower = new Tower(new Vector2(event.getStageX(), event.getStageY()));
+				tower = new CommonTower(new Vector2(event.getStageX(), event.getStageY()));
 			}
 			//For debug
 			//label.setText(Float.toString(x) + "--" + Float.toString(y));
@@ -64,26 +66,17 @@ public class MyGdxGame extends ApplicationAdapter {
 		stage = new Stage(new ScreenViewport());
 
 		//Object that consists styles for actors
-		skin = new Skin(Gdx.files.internal("uiskin.json"));
+		skin = new Skin(Gdx.files.internal("./Style/uiskin.json"));
+		pathTowers = new String[] {"./TD/Towers/common_tower.png"};
 
 		//For debug (Dialog, label)
 		/*final Dialog dialog = new Dialog("", skin);
 		final Label label = new Label("Coordinates", skin);
 		label.setPosition(200, 200);*/
 
-		Image tower1 = new Image(new Texture(Gdx.files.internal("common_tower.png")));
-		Image tower2 = new Image(new Texture(Gdx.files.internal("common_tower.png")));
-		tower1.setColor(1,0,0,1f);
-		tower2.setColor(1,1,1,1f);
-
-		tower1.addListener(new TowerListener());
-		tower2.addListener(new TowerListener());
-
-		towers = new ArrayList<>();
-		towers.add(tower1);
-		towers.add(tower2);
-
-		panel = new UIPanel(stage, towers);
+		panel = new UIPanel(stage);
+		panel.setTowersOnPanel(pathTowers);
+		panel.setListenerForTableOnPanel(new TowerOnPanelListener());
 
 		enemies = new ArrayList<>();
 		enemies.add(new Ghost(bg));
@@ -113,13 +106,14 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 
 	public void update() {
-		for (Enemy enemy: enemies) {
-			if (enemy != null && enemy.position.x > bg.endOfBg + 20) {
-				enemy = null;
+		for (int i = 0; i < enemies.size(); i++) {
+			if (enemies.get(i) != null && enemies.get(i).position.x > bg.endOfBg + 20) {
+				enemies.set(i, null);
+				System.out.println("Enemy is deleted");
 			}
-			else if (enemy != null){
-				enemy.update();
-				bg.update(enemy);
+			else if (enemies.get(i) != null){
+				enemies.get(i).update();
+				bg.update(enemies.get(i));
 			}
 		}
 		stage.act(Gdx.graphics.getDeltaTime());

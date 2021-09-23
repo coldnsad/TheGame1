@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class UIPanel {
@@ -14,9 +16,11 @@ public class UIPanel {
     private Table innerTable;
     private Table outerTable;
     private Image panelTexture;
+    ArrayList<Image> towersIcons;
 
-    UIPanel(Stage stage, ArrayList<Image> towers) {
-        panelTexture = new Image(new Texture(Gdx.files.internal("bottom_panel.jpg")));
+    UIPanel(Stage stage) {
+        panelTexture = new Image(new Texture(Gdx.files.internal("./TD/Backgrounds/bottom_panel.jpg")));
+        towersIcons = new ArrayList<>();
 
         innerTable = new Table();
         innerTable.setWidth(stage.getWidth());
@@ -31,12 +35,26 @@ public class UIPanel {
         outerTable.align(Align.center|Align.bottom);
         outerTable.setPosition(0,0);
         outerTable.setColor(1,1,1,1f);
-
         innerTable.add(panelTexture);
+    }
 
-        for (Image tower: towers) {
-            outerTable.add(tower);
+    public void setTowersOnPanel(String[] pathTowers) {
+
+        for (String pathTower : pathTowers) {
+            Image newTowerIconOnPanel = new Image(new Texture(Gdx.files.internal(pathTower)));
+            towersIcons.add(newTowerIconOnPanel);
+            outerTable.add(newTowerIconOnPanel);
         }
+    }
+
+    public void setListenerForTableOnPanel(ClickListener clickListener) {
+        for (Image tower: towersIcons) {
+            tower.addListener(clickListener);
+        }
+    }
+
+    public ArrayList<Image> getTowersFromPanel(){
+        return towersIcons;
     }
 
     public Table getInnerTable(){

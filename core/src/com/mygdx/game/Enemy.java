@@ -14,9 +14,6 @@ abstract public class Enemy {
     protected float speed;
     protected ArrayList<Vector2> keyPoints;
 
-    public Enemy(){
-    }
-
     public void render(SpriteBatch batch){
 
         batch.draw(texture, position.x, position.y);
