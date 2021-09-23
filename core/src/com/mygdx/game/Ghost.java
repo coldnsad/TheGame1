@@ -10,7 +10,7 @@ class Ghost extends Enemy{
 
     Ghost(Background bg) {
         position = new Vector2(bg.positionOfEnemies.x, bg.positionOfEnemies.y);
-        texture = new Texture("./TD/Sprites/mob112x100.png");
+        texture = new Texture("./TD/Sprites/Enemies/mob112x100.png");
         //Speed can be only divider of 10 (1,2,5,10)
         speed = 0.5f;
 

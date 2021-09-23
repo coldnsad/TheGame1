@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
 import java.util.ArrayList;
 
 public class MyGdxGame extends ApplicationAdapter {
@@ -36,7 +37,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			//Create object of tower if key is in down state
 			if (tower == null) {
-				tower = new CommonTower(new Vector2(event.getStageX(), event.getStageY()));
+				switch (event.getTarget().getName()){
+					case("common"):
+						tower = new CommonTower(new Vector2(event.getStageX(), event.getStageY()));
+						break;
+					case("nature"):
+						tower = new NatureTower(new Vector2(event.getStageX(), event.getStageY()));
+						break;
+				}
 			}
 			//For debug
 			//label.setText(Float.toString(x) + "--" + Float.toString(y));
@@ -46,6 +54,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		@Override
 		public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 			//Create object of tower if key is in up state
+			tower.setPosition(new Vector2(event.getStageX(), event.getStageY()));
+			activeTowers.add(new CommonTower(tower));
 			tower = null;
 			super.touchUp(event, x, y, pointer, button);
 		}
@@ -64,10 +74,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		bg = new GrassBackground();
 		stage = new Stage(new ScreenViewport());
+		activeTowers = new ArrayList<>();
 
 		//Object that consists styles for actors
 		skin = new Skin(Gdx.files.internal("./Style/uiskin.json"));
-		pathTowers = new String[] {"./TD/Towers/common_tower.png"};
+		//The name of file must fit this pattern *_*.* !!!
+		pathTowers = new String[] {"./TD/Sprites/Towers/common_tower.png",
+								   "./TD/Sprites/Towers/nature_tower.png"};
 
 		//For debug (Dialog, label)
 		/*final Dialog dialog = new Dialog("", skin);
@@ -100,6 +113,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 		if (tower != null) {
 			tower.render(batch);
+		}
+		for (Tower tower: activeTowers) {
+			if(tower != null) tower.render(batch);
 		}
 		batch.end();
 		stage.draw();

@@ -40,8 +40,13 @@ public class UIPanel {
 
     public void setTowersOnPanel(String[] pathTowers) {
 
+        String[] temp;
         for (String pathTower : pathTowers) {
+            temp = pathTower.split("/");
+            temp = temp[temp.length - 1].split("_");
+
             Image newTowerIconOnPanel = new Image(new Texture(Gdx.files.internal(pathTower)));
+            newTowerIconOnPanel.setName(temp[0]);
             towersIcons.add(newTowerIconOnPanel);
             outerTable.add(newTowerIconOnPanel);
         }

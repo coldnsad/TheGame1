@@ -10,6 +10,10 @@ public abstract class Tower {
     protected Vector2 position;
     protected Vector2 cost;
 
+    public void setPosition(Vector2 newPosition) {
+        position = newPosition;
+    }
+
     public void render(SpriteBatch batch){
         batch.draw(texture, position.x, position.y);
     }
