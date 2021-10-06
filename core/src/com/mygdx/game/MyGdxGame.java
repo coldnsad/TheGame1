@@ -18,54 +18,62 @@ import java.util.ArrayList;
 
 public class MyGdxGame extends ApplicationAdapter {
 
-	SpriteBatch batch;
-	Background bg;
-	ArrayList<Enemy> enemies;
-	UIPanel panel;
 
+	SpriteBatch batch;
+
+	//Background properties
+	Background bg;
+
+	//Enemy properties
+	ArrayList<Enemy> enemies;
+
+	//UI properties
 	Stage stage;
 	Skin skin;
+	Label label;
+	UIPanel panel;
 
-	Tower tower;
+	//Tower properties
+	Tower currentTower;
 	ArrayList<Image> towersOnPanel;
 	ArrayList<Tower> activeTowers;
-	String[] pathTowers;
+	//The name of file must fit this pattern *_*.* !!!
+	String[] pathTowers = new String[] {"./TD/Sprites/Towers/common_tower.png",
+										"./TD/Sprites/Towers/nature_tower.png"};
 
 	//Inner class for listeners
 	class TowerOnPanelListener extends ClickListener {
 
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			//Create object of tower if key is in down state
-			if (tower == null) {
+			if (currentTower == null) {
 				switch (event.getTarget().getName()){
 					case("common"):
-						tower = new CommonTower(new Vector2(event.getStageX(), event.getStageY()));
+						currentTower = new CommonTower(new Vector2(event.getStageX(), event.getStageY()));
 						break;
 					case("nature"):
-						tower = new NatureTower(new Vector2(event.getStageX(), event.getStageY()));
+						currentTower = new NatureTower(new Vector2(event.getStageX(), event.getStageY()));
 						break;
 				}
 			}
-			//For debug
-			//label.setText(Float.toString(x) + "--" + Float.toString(y));
 			return super.touchDown(event, x, y, pointer, button);
 		}
 
 		@Override
 		public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-			//Create object of tower if key is in up state
-			tower.setPosition(new Vector2(event.getStageX(), event.getStageY()));
-			activeTowers.add(new CommonTower(tower));
-			tower = null;
 			super.touchUp(event, x, y, pointer, button);
+			//Create object of tower if key is in up state
+			currentTower.setPosition(new Vector2(event.getStageX(), event.getStageY()));
+			activeTowers.add(new CommonTower(currentTower));
+			currentTower = null;
 		}
 
 		@Override
 		public void touchDragged(InputEvent event, float x, float y, int pointer) {
-			tower.update(new Vector2(event.getStageX(),event.getStageY()));
+			super.touchDragged(event, x, y, pointer);
+			currentTower.setPosition(new Vector2(event.getStageX(),event.getStageY()));
 			//For debug
 			//label.setText(Float.toString(x) + "--" + Float.toString(y));
-			super.touchDragged(event, x, y, pointer);
 		}
 	}//END Inner class for listener
 
@@ -75,17 +83,15 @@ public class MyGdxGame extends ApplicationAdapter {
 		bg = new GrassBackground();
 		stage = new Stage(new ScreenViewport());
 		activeTowers = new ArrayList<>();
+		//activeTowers.add(new CommonTower(new Vector2(430, 550)));
 
 		//Object that consists styles for actors
 		skin = new Skin(Gdx.files.internal("./Style/uiskin.json"));
-		//The name of file must fit this pattern *_*.* !!!
-		pathTowers = new String[] {"./TD/Sprites/Towers/common_tower.png",
-								   "./TD/Sprites/Towers/nature_tower.png"};
 
 		//For debug (Dialog, label)
-		/*final Dialog dialog = new Dialog("", skin);
-		final Label label = new Label("Coordinates", skin);
-		label.setPosition(200, 200);*/
+		//final Dialog dialog = new Dialog("", skin);
+		label = new Label("Coordinates", skin);
+		label.setPosition(200, 200);
 
 		panel = new UIPanel(stage);
 		panel.setTowersOnPanel(pathTowers);
@@ -97,7 +103,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		stage.addActor(panel.getInnerTable());
 		stage.addActor(panel.getOuterTable());
-		//stage.addActor(label);
+		stage.addActor(label);
 
 		Gdx.input.setInputProcessor(stage);
 		//stage.setDebugAll(true);
@@ -111,8 +117,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		for (Enemy enemy: enemies) {
 			if(enemy != null) enemy.render(batch);
 		}
-		if (tower != null) {
-			tower.render(batch);
+		if (currentTower != null) {
+			currentTower.render(batch);
 		}
 		for (Tower tower: activeTowers) {
 			if(tower != null) tower.render(batch);
@@ -130,8 +136,26 @@ public class MyGdxGame extends ApplicationAdapter {
 			else if (enemies.get(i) != null){
 				enemies.get(i).update();
 				bg.update(enemies.get(i));
+
+				if (activeTowers.size() != 0) {
+					for (Tower tower: activeTowers) {
+						if(tower.isEnemyNear(enemies.get(i)) == true) {
+							tower.Shoot();
+							System.out.println("SHOOT");
+						}
+					}
+				}
 			}
 		}
+
+		if (currentTower != null) currentTower.update();
+
+		//For debug
+		if (activeTowers.size() != 0 && enemies.get(0) != null) {
+
+			label.setText(Float.toString(activeTowers.get(0).position.dst(enemies.get(0).position)));
+		}//END For debug
+
 		stage.act(Gdx.graphics.getDeltaTime());
 	}
 	
