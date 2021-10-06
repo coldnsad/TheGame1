@@ -10,6 +10,7 @@ public class CommonTower extends Tower {
         sprite = new Sprite(new Texture("./TD/Sprites/Towers/common_tower.png"));
         position = startPosition;
         range = 200;
+        hasTarget = false;
     }
 
     CommonTower(Tower t) {
@@ -17,5 +18,6 @@ public class CommonTower extends Tower {
         cost = t.cost;
         position = t.position;
         range = 200;
+        hasTarget = false;
     }
 }

@@ -15,6 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class MyGdxGame extends ApplicationAdapter {
 
@@ -83,6 +85,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		bg = new GrassBackground();
 		stage = new Stage(new ScreenViewport());
 		activeTowers = new ArrayList<>();
+
+		//Tower for debugging
 		//activeTowers.add(new CommonTower(new Vector2(430, 550)));
 
 		//Object that consists styles for actors
@@ -128,30 +132,35 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 
 	public void update() {
-		for (int i = 0; i < enemies.size(); i++) {
-			if (enemies.get(i) != null && enemies.get(i).position.x > bg.endOfBg + 20) {
-				enemies.set(i, null);
+		Iterator<Enemy> it = enemies.iterator();
+		while (it.hasNext()) {
+			Enemy nextEnemy = it.next();
+			if (nextEnemy.position.x > bg.endOfBg + 20) {
+				it.remove();
 				System.out.println("Enemy is deleted");
 			}
-			else if (enemies.get(i) != null){
-				enemies.get(i).update();
-				bg.update(enemies.get(i));
-
-				if (activeTowers.size() != 0) {
-					for (Tower tower: activeTowers) {
-						if(tower.isEnemyNear(enemies.get(i)) == true) {
-							tower.Shoot();
-							System.out.println("SHOOT");
-						}
-					}
-				}
+			else {
+				nextEnemy.update();
+				bg.update(nextEnemy);
 			}
 		}
+
+		//Targeting
+		if (activeTowers.size() != 0) {
+			for (Tower tower: activeTowers) {
+				if(tower.hasTarget) {
+					tower.Shoot();
+					System.out.println("SHOOT");
+				}else{
+					tower.searchTarget(enemies);
+				}
+			}
+		}// END Targeting
 
 		if (currentTower != null) currentTower.update();
 
 		//For debug
-		if (activeTowers.size() != 0 && enemies.get(0) != null) {
+		if (activeTowers.size() != 0 && enemies.size() != 0) {
 
 			label.setText(Float.toString(activeTowers.get(0).position.dst(enemies.get(0).position)));
 		}//END For debug

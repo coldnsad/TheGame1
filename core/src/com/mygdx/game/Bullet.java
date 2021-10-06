@@ -17,9 +17,12 @@ public abstract class Bullet {
     protected Float distance; // between spawn point of ammo and enemy position
 
     public void move(){
-        distance = position.dst(target.position);
-        position.x+=speed * Gdx.graphics.getDeltaTime() * (target.position.x - position.x) / distance;
-        position.y+=speed * Gdx.graphics.getDeltaTime() * (target.position.y - position.y) / distance;
+        float targetPositionX = target.position.x + ((float)target.texture.getWidth() / 2);
+        float targetPositionY = target.position.y + ((float)target.texture.getHeight() / 2);
+        distance = position.dst(new Vector2(targetPositionX, targetPositionY));
+
+        position.x+=speed * Gdx.graphics.getDeltaTime() * (targetPositionX - position.x) / distance;
+        position.y+=speed * Gdx.graphics.getDeltaTime() * (targetPositionY - position.y) / distance;
         sprite.setPosition(position.x, position.y);
     }
 
