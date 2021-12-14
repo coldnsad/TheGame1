@@ -12,6 +12,6 @@ class CommonBullet extends Bullet {
         target = currentTarget;
         position = startPosition;
         sprite.setPosition(position.x, position.y);
-        speed = 300f;
+        speed = 100f;
     }
 }

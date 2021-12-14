@@ -20,7 +20,6 @@ import java.util.List;
 
 public class MyGdxGame extends ApplicationAdapter {
 
-
 	SpriteBatch batch;
 
 	//Background properties
@@ -150,6 +149,24 @@ public class MyGdxGame extends ApplicationAdapter {
 			for (Tower tower: activeTowers) {
 				if(tower.hasTarget) {
 					tower.Shoot();
+					if(tower.activeBullet != null && tower.activeBullet.position.dst(tower.currentTarget.position) < 50){
+						tower.currentTarget.hp-=1;
+					}
+
+					it = enemies.iterator();
+					while (it.hasNext()) {
+						Enemy nextEnemy = it.next();
+						if (nextEnemy.hp <= 0) {
+							it.remove();
+							for (Tower tower2: activeTowers) {
+								if (tower2.hasTarget && tower2.currentTarget == tower.currentTarget){
+									tower2.clear();
+								}
+							}
+							System.out.println("Enemy is destroyed");
+						}
+					}
+
 					System.out.println("SHOOT");
 				}else{
 					tower.searchTarget(enemies);
@@ -161,7 +178,6 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		//For debug
 		if (activeTowers.size() != 0 && enemies.size() != 0) {
-
 			label.setText(Float.toString(activeTowers.get(0).position.dst(enemies.get(0).position)));
 		}//END For debug
 

@@ -68,10 +68,17 @@ public abstract class Tower {
             }
         }
         if (currentTarget.position.dst(position) > range) {
-            currentTarget = null;
+            /*currentTarget = null;
             hasTarget = false;
-            activeBullet = null;
+            activeBullet = null;*/
+            clear();
         }
+    }
+
+    public void clear(){
+        currentTarget = null;
+        hasTarget = false;
+        activeBullet = null;
     }
 
     public void render(SpriteBatch batch){

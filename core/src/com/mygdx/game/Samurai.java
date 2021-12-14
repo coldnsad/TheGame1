@@ -10,6 +10,7 @@ class Samurai extends Enemy{
     Samurai(Background bg){
         position = new Vector2(bg.positionOfEnemies.x, bg.positionOfEnemies.y);
         texture = new Texture("./TD/Sprites/Enemies/samurai118x100.png");
+        hp = 10;
         //Speed can be only divider of 10 (1,2,5)
         speed = 1.0f;
 

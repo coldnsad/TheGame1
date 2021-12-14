@@ -12,6 +12,7 @@ abstract public class Enemy {
     protected Vector2 position;
     protected int countOfPassedPoints = 0;
     protected float speed;
+    protected int hp;
     protected ArrayList<Vector2> keyPoints;
 
     public void render(SpriteBatch batch){
