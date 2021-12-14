@@ -30,16 +30,22 @@ public class MainScreen implements Screen {
     //UI properties
     Stage stage;
     Skin skin;
-    Label label;
     UIPanel panel;
+
+    Label nameForPoints;
+    Label points;
+    Label nameForEnemies;
+    Label amountOfEnemies;
 
     //Tower properties
     Tower currentTower;
     ArrayList<Image> towersOnPanel;
     ArrayList<Tower> activeTowers;
     //The name of file must fit this pattern *_*.* !!!
-    String[] pathTowers = new String[] {"./TD/Sprites/Towers/common_tower.png",
-            "./TD/Sprites/Towers/nature_tower.png"};
+    String[] pathTowers = new String[] {"./TD/Sprites/Towers/common_tower.png", "./TD/Sprites/Towers/nature_tower.png"};
+
+    int enemiesLeft;
+    int accumulatedPoints;
 
     public MainScreen(Game myGdxGame) {
         this.game = myGdxGame;
@@ -87,6 +93,8 @@ public class MainScreen implements Screen {
         bg = new GrassBackground();
         stage = new Stage(new ScreenViewport());
         activeTowers = new ArrayList<>();
+        enemiesLeft = bg.amountOFEnemiesForGameOver;
+        accumulatedPoints = 0;
 
         //Tower for debugging
         //activeTowers.add(new CommonTower(new Vector2(430, 550)));
@@ -96,8 +104,17 @@ public class MainScreen implements Screen {
 
         //For debug (Dialog, label)
         //final Dialog dialog = new Dialog("", skin);
-        label = new Label("Coordinates", skin);
-        label.setPosition(200, 200);
+        nameForEnemies = new Label("Enemies left: ", skin);
+        nameForEnemies.setPosition(1000, 650);
+
+        amountOfEnemies = new Label(Integer.toString(enemiesLeft), skin);
+        amountOfEnemies.setPosition(nameForEnemies.getX() + 100, nameForEnemies.getY());
+
+        nameForPoints = new Label("Points: ", skin);
+        nameForPoints.setPosition(nameForEnemies.getX(), nameForEnemies.getY() - 40);
+
+        points = new Label(Integer.toString(accumulatedPoints), skin);
+        points.setPosition(nameForPoints.getX() + 70, nameForPoints.getY());
 
         panel = new UIPanel(stage);
         panel.setTowersOnPanel(pathTowers);
@@ -109,7 +126,11 @@ public class MainScreen implements Screen {
 
         stage.addActor(panel.getInnerTable());
         stage.addActor(panel.getOuterTable());
-        stage.addActor(label);
+
+        stage.addActor(nameForEnemies);
+        stage.addActor(amountOfEnemies);
+        stage.addActor(nameForPoints);
+        stage.addActor(points);
 
         Gdx.input.setInputProcessor(stage);
         //stage.setDebugAll(true);
@@ -139,6 +160,12 @@ public class MainScreen implements Screen {
             Enemy nextEnemy = it.next();
             if (nextEnemy.position.x > bg.endOfBg + 20) {
                 it.remove();
+                enemiesLeft-=1;
+                amountOfEnemies.setText(Integer.toString(enemiesLeft));
+                if (enemiesLeft <=0){
+                    game.setScreen(new GameOverScreen(this.game));
+                }
+
                 System.out.println("Enemy is deleted");
             }
             else {
@@ -147,9 +174,9 @@ public class MainScreen implements Screen {
             }
         }
 
-        if (enemies.size() == 0){
+       /* if (enemies.size() == 0){
             game.setScreen(new GameOverScreen(game));
-        }
+        }*/
 
         //Targeting
         if (activeTowers.size() != 0) {
@@ -165,6 +192,8 @@ public class MainScreen implements Screen {
                         Enemy nextEnemy = it.next();
                         if (nextEnemy.hp <= 0) {
                             it.remove();
+                            accumulatedPoints+=nextEnemy.cost;
+                            points.setText(Integer.toString(accumulatedPoints));
                             for (Tower tower2: activeTowers) {
                                 if (tower2.hasTarget && tower2.currentTarget == tower.currentTarget){
                                     tower2.clear();
@@ -184,9 +213,9 @@ public class MainScreen implements Screen {
         if (currentTower != null) currentTower.update();
 
         //For debug
-        if (activeTowers.size() != 0 && enemies.size() != 0) {
+        /*if (activeTowers.size() != 0 && enemies.size() != 0) {
             label.setText(Float.toString(activeTowers.get(0).position.dst(enemies.get(0).position)));
-        }//END For debug
+        }*///END For debug
 
         stage.act(Gdx.graphics.getDeltaTime());
     }

@@ -13,6 +13,7 @@ public class GrassBackground extends Background{
         position = new Vector2(0,0);
         positionOfEnemies = new Vector2(-20,320);
         endOfBg = texture.getWidth();
+        amountOFEnemiesForGameOver = 2;
 
         keyPoints = new ArrayList<>();
         keyPoints.add(new Vector2(130, 320));  //1

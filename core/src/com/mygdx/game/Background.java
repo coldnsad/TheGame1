@@ -13,6 +13,7 @@ public abstract class Background {
     protected ArrayList<Vector2> keyPoints;
     protected Vector2 positionOfEnemies;
     protected int endOfBg;
+    protected int amountOFEnemiesForGameOver;
 
     Background(){
         position = new Vector2(0,0);
