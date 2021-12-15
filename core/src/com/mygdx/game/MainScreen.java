@@ -13,8 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
 public class MainScreen implements Screen {
 
@@ -46,6 +45,7 @@ public class MainScreen implements Screen {
 
     int enemiesLeft;
     int accumulatedPoints;
+    int randomValue;
 
     public MainScreen(Game myGdxGame) {
         this.game = myGdxGame;
@@ -123,6 +123,7 @@ public class MainScreen implements Screen {
         enemies = new ArrayList<>();
         enemies.add(new Ghost(bg));
         enemies.add(new Samurai(bg));
+        Collections.shuffle(enemies);
 
         stage.addActor(panel.getInnerTable());
         stage.addActor(panel.getOuterTable());
@@ -155,6 +156,15 @@ public class MainScreen implements Screen {
     }
 
     public void update(){
+
+        randomValue+=1;
+        if(randomValue == 1000){
+            enemies.add(new Ghost(bg));
+            enemies.add(new Samurai(bg));
+            Collections.shuffle(enemies);
+            randomValue = 0;
+        }
+
         Iterator<Enemy> it = enemies.iterator();
         while (it.hasNext()) {
             Enemy nextEnemy = it.next();
@@ -196,6 +206,7 @@ public class MainScreen implements Screen {
                             points.setText(Integer.toString(accumulatedPoints));
                             for (Tower tower2: activeTowers) {
                                 if (tower2.hasTarget && tower2.currentTarget == tower.currentTarget){
+                                    System.out.println(tower2);
                                     tower2.clear();
                                 }
                             }
